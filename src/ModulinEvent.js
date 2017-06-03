@@ -155,3 +155,5 @@ class ModulinEvent {
     }
   }
 }
+
+export default ModulinEvent;

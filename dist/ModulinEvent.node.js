@@ -57,3 +57,5 @@ class ModulinEvent {
     }
   }
 }
+
+module.exports = ModulinEvent;
