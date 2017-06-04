@@ -1,13 +1,13 @@
 # Modulin Event
-An event source which can be used to add event's to objects. A minimal functional
+A small event emitter, around 250 bytes minified and gziped, which can be used to add events to objects. This is a minimal 
 implementation based on the WebExtension Event class:
 https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/events
 
 Provides a way to add events to any object through composition instead of inheritance.
 Due to events being properties on an object or class, a quick inspection of the
-constructor or an instance exposes all event's the object might trigger.
+constructor or an instance exposes all event's the object may trigger.
 
-This can also help IDEs with auto completion of available events.
+This can also help IDEs with auto completion of available events, since they are ordinary properties.
 
 # Example
 ```javascript
@@ -31,5 +31,5 @@ ticker.tick.once(console.log); //-> 1
 ```
 
 # Documentation
-Documentation of the class can be found
+Documentation can be found
 [here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/RikardLegge/modulin-event/master/docs/ModulinEvent.html)
