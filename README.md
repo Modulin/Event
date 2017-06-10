@@ -1,5 +1,5 @@
 # Modulin Event
-A small event emitter, around 250 bytes minified and gziped, which can be used to add events to objects. This is a minimal 
+A small event emitter, around 450 bytes minified and gziped, which can be used to add events to objects. This is a minimal 
 implementation based on the [WebExtension Event class](https://developer.chrome.com/extensions/events)
 
 Provides a way to add events to any object through composition instead of inheritance.
@@ -34,12 +34,17 @@ class Ticker {
 // Create a new ticker
 const ticker = new Ticker();
 
+const onlyEven = (val)=>val % 2 === 0;
+
 // log to the console on every 'tick'
 ticker.tick.on(console.log); // -> 1,2,3,4,...
 
+// log to the console on every event 'tick'
+ticker.tick.on(console.log, onlyEven); // -> 2,4,...
+
 // log to the console the first time tick
-// dispatches an event
-ticker.tick.once(console.log); //-> 1
+// dispatches an event with an even value
+ticker.tick.once(console.log, onlyEven); //-> 2
 ```
 
 # Documentation
