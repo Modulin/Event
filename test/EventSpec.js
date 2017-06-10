@@ -1,11 +1,11 @@
 const assert = require('assert');
-const ModulinEvent = require('../dist/ModulinEvent.node');
+const Event = require('../dist/Event.node');
 
-describe('ModulinEvent', () => {
+describe('Event', () => {
   const throwOnCall = ()=>{throw new Error("failed");};
   describe('#on()', () => {
     it('should add an event listener', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
 
       let callCount = 0;
       const increment = ()=>callCount++;
@@ -17,7 +17,7 @@ describe('ModulinEvent', () => {
     });
 
     it('should not accept function values', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
 
       assert.throws(()=>source.on(), TypeError, "Undefined should throw an exception");
       assert.throws(()=>source.on(null), TypeError, "null should throw an exception");
@@ -25,7 +25,7 @@ describe('ModulinEvent', () => {
     });
 
     it('should only add one event listener ', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
 
       let callCount = 0;
       const increment = ()=>callCount++;
@@ -37,7 +37,7 @@ describe('ModulinEvent', () => {
     });
 
     it('should returns an un-listener', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
 
       const unListen = source.on(throwOnCall);
       unListen();
@@ -48,7 +48,7 @@ describe('ModulinEvent', () => {
 
   describe('#once()', ()=> {
     it('should only trigger once', ()=>{
-      const source = new ModulinEvent();
+      const source = new Event();
 
       let callCount = 0;
       const increment = ()=>callCount++;
@@ -60,7 +60,7 @@ describe('ModulinEvent', () => {
     });
 
     it('show returns an un-listener', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
 
       const unListen = source.once(throwOnCall);
       unListen();
@@ -71,7 +71,7 @@ describe('ModulinEvent', () => {
 
   describe('#off()', ()=>{
     it('should only remove the event listener', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
       let callCount = 0;
       const increment = ()=>callCount++;
 
@@ -84,7 +84,7 @@ describe('ModulinEvent', () => {
     });
 
     it('should remove multiple', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
       const throwOnCall2 = ()=>{throw new Error("failed");};
 
       source.on(throwOnCall);
@@ -95,17 +95,17 @@ describe('ModulinEvent', () => {
     });
 
     it('should not do anything if no listeners exist', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
       source.off(throwOnCall);
     });
 
     it('should not do anything if null is provided', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
       source.off(null);
     });
 
     it('should not do anything if listener is not found', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
       let callCount = 0;
       const increment = ()=>callCount++;
 
@@ -119,7 +119,7 @@ describe('ModulinEvent', () => {
 
   describe('#clear', ()=>{
     it('should remove all listeners', ()=>{
-      const source = new ModulinEvent();
+      const source = new Event();
 
       source.on(throwOnCall);
 
@@ -130,7 +130,7 @@ describe('ModulinEvent', () => {
 
   describe('#dispatch', ()=> {
     it('should forward varargs', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
       let result={};
       source.on((a,b,c)=>result={a,b,c});
 
@@ -139,7 +139,7 @@ describe('ModulinEvent', () => {
     });
 
     it('should blow up on classes', () => {
-      const source = new ModulinEvent();
+      const source = new Event();
 
       source.on(class {});
 

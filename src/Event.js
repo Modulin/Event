@@ -12,7 +12,7 @@
  * @example
  * class Ticker {
  *   constructor() {
- *    this.tick = new ModulinEvent();
+ *    this.tick = new Event();
  *
  *    this.count = 0;
  *    setInterval(()=>this.increment(),100);
@@ -28,7 +28,7 @@
  * ticker.tick.on(console.log); // -> 1,2,3,4,...
  * ticker.tick.once(console.log); //-> 1
  */
-class ModulinEvent {
+class Event {
 
   /**
    * @param {Array} listeners=Array - An optional list of listeners which can be a custom array implementation if
@@ -44,7 +44,7 @@ class ModulinEvent {
    * since it's possible to unregister the listener without a reference to the anonymous function.
    *
    * @example
-   * const source = new ModulinEvent();
+   * const source = new Event();
    * const log = ()=>console.log('i will be called');
    * const log2 = ()=>console.log('i will also be called');
    *
@@ -53,7 +53,7 @@ class ModulinEvent {
    * source.dispatch(); // -> "i will be called", "i will also be called"
    *
    * @param {function} listener - The listener which will be called when triggered by
-   * [dispatch]{@link ModulinEvent#dispatch} - The listener which only will be called
+   * [dispatch]{@link Event#dispatch} - The listener which only will be called
    * @returns {function(): void} - A function which unregisters the listener
    */
   on(listener) {
@@ -70,10 +70,10 @@ class ModulinEvent {
   }
 
   /**
-   * Unregisters itself after it's first call, otherwise identical to [on]{ModulinEvent#on}.
+   * Unregisters itself after it's first call, otherwise identical to [on]{Event#on}.
    *
    * @example
-   * const source = new ModulinEvent();
+   * const source = new Event();
    * const log = ()=>console.log('i will be called once');
    *
    * source.once(log);
@@ -98,7 +98,7 @@ class ModulinEvent {
    * by passing multiple parameters
    *
    * @example
-   * const source = new ModulinEvent();
+   * const source = new Event();
    * const log1 = ()=>console.log('i will not be called');
    * const log2 = ()=>console.log('i will not be called either');
    * 
@@ -123,7 +123,7 @@ class ModulinEvent {
    * Clear all event listeners.
    *
    * @example
-   * const source = new ModulinEvent();
+   * const source = new Event();
    * const log = ()=>console.log('i will not be called');
    *
    * source.on(log);
@@ -141,7 +141,7 @@ class ModulinEvent {
    * varargs and passed through to the listener.
    *
    * @example
-   * const source = new ModulinEvent();
+   * const source = new Event();
    *
    * source.on(console.log);
    * source.dispatch('hello', 'world'); // -> "hello, world"
@@ -156,4 +156,4 @@ class ModulinEvent {
   }
 }
 
-export default ModulinEvent;
+export default Event;

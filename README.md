@@ -17,7 +17,7 @@ class Ticker {
   constructor() {
     // Add an event emitter to the Ticker which
     // can be listened to using instance.tick.on(...)
-    this.tick = new ModulinEvent();
+    this.tick = new Event();
 
     // Reset the count and start the ticker
     this.count = 0;
@@ -45,4 +45,4 @@ ticker.tick.once(console.log); //-> 1
 
 # Documentation
 Documentation can be found
-[here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/RikardLegge/modulin-event/master/docs/ModulinEvent.html)
+[here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/RikardLegge/modulin-event/master/docs/Event.html)

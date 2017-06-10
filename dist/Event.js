@@ -1,5 +1,5 @@
 
-class ModulinEvent {
+class Event {
 
   
   constructor(listeners=[]) {

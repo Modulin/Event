@@ -1,5 +1,5 @@
 
-class ModulinEvent {
+class Event {
 
   
   constructor(listeners=[]) {
@@ -58,4 +58,4 @@ class ModulinEvent {
   }
 }
 
-module.exports = ModulinEvent;
+module.exports = Event;
