@@ -66,8 +66,18 @@ class Event {
   dispatch(...args) {
     this._purgeRemovedListeners();
 
+    listenerLoop:
     for(let i = 0; i < this._listeners.length; i++) {
       const listener = this._listeners[i];
+
+      for(let j = 0; j < listener.filters.length; j++){
+        const filter = listener.filters[j];
+        const filterPassed = filter.call(filter, ...args);
+        if(!filterPassed) {
+          continue listenerLoop;
+        }
+      }
+
       listener(...args);
     }
   }

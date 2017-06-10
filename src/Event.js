@@ -43,6 +43,10 @@ class Event {
    * Registers a listener on the event source. An un-listener is returned which should be called without
    * arguments to unregister the event. This eases the use of anonymous functions as the event listener
    * since it's possible to unregister the listener without a reference to the anonymous function.
+   * <br><br>
+   * Important note!
+   * <br>
+   * Adding the same event twice will be seen as a no op, event if the filters are different
    *
    * @example
    * const source = new Event();
@@ -55,6 +59,7 @@ class Event {
    *
    * @param {function} listener - The listener which will be called when triggered by
    * [dispatch]{@link Event#dispatch} - The listener which only will be called
+   * @param {...function} filters - A set of function which all must return true for the listener to fire
    * @returns {function(): void} - A function which unregisters the listener
    */
   on(listener, ...filters) {
@@ -166,8 +171,18 @@ class Event {
   dispatch(...args) {
     this._purgeRemovedListeners();
 
+    listenerLoop:
     for(let i = 0; i < this._listeners.length; i++) {
       const listener = this._listeners[i];
+
+      for(let j = 0; j < listener.filters.length; j++){
+        const filter = listener.filters[j];
+        const filterPassed = filter.call(filter, ...args);
+        if(!filterPassed) {
+          continue listenerLoop;
+        }
+      }
+
       listener(...args);
     }
   }

@@ -44,6 +44,39 @@ describe('Event', () => {
 
       source.dispatch();
     });
+
+    it('should be filtered', ()=>{
+      const source = new Event();
+
+      source.on(throwOnCall, ()=>false);
+
+      source.dispatch();
+    });
+
+    it('should not be filtered', ()=>{
+      const source = new Event();
+
+      let callCount = 0;
+      const increment = ()=>callCount++;
+      source.on(increment, ()=>true);
+
+      source.dispatch();
+
+      assert.equal(callCount, 1);
+    });
+
+    it('should not filter all', ()=>{
+      const source = new Event();
+
+      let callCount = 0;
+      const increment = ()=>callCount++;
+      source.on(throwOnCall, ()=>false);
+      source.on(increment, ()=>true);
+
+      source.dispatch();
+
+      assert.equal(callCount, 1);
+    });
   });
 
   describe('#once()', ()=> {
