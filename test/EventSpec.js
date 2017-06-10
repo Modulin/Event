@@ -59,6 +59,31 @@ describe('Event', () => {
       assert.equal(callCount, 1, "Event listener was not attached or attached to many times");
     });
 
+    it('should trigger all events', ()=>{
+      const source = new Event();
+
+      let callCount = 0;
+      const increment1 = ()=>callCount++;
+      const increment2 = ()=>callCount++;
+      source.once(increment1);
+      source.once(increment2);
+
+      source.dispatch();
+      assert.equal(callCount, 2, "Event listener was not attached or attached to many times");
+    });
+
+    it('should only be added once', ()=>{
+      const source = new Event();
+
+      let callCount = 0;
+      const increment = ()=>callCount++;
+      source.once(increment);
+      source.once(increment);
+
+      source.dispatch();
+      assert.equal(callCount, 1, "Event listener was not attached or attached to many times");
+    });
+
     it('show returns an un-listener', () => {
       const source = new Event();
 

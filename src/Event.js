@@ -36,6 +36,7 @@ class Event {
    */
   constructor(listeners=[]) {
     this._listeners = listeners;
+    this._removedIndexes = [];
   }
 
   /**
@@ -56,17 +57,24 @@ class Event {
    * [dispatch]{@link Event#dispatch} - The listener which only will be called
    * @returns {function(): void} - A function which unregisters the listener
    */
-  on(listener) {
+  on(listener, ...filters) {
     if(typeof listener !== 'function') {
       const type = typeof listener;
       throw new TypeError("Only functions can be used as callbacks, the provided listener was a " + type);
     }
 
-    const index = this._listeners.indexOf(listener);
+    if(!listener.eventId) {
+      const originalListener = listener;
+      listener = (...args)=>originalListener(...args);
+      listener.eventId = originalListener;
+    }
+
+    const index = this._indexOf(listener.eventId);
     if(index === -1) {
+      listener.filters = filters;
       this._listeners.push(listener);
     }
-    return () => this.off(listener);
+    return () => this.off(listener.eventId);
   }
 
   /**
@@ -81,10 +89,13 @@ class Event {
    * source.dispatch(); // ->
    *
    * @param {function} listener - The listener which only will be called once
+   * @param {...function} filters - An optional list of filters which all must
+   *                                return true for the listener to be run
    * @returns {function(): void} - A function which unregisters the listener
    */
-  once(listener) {
-    const unListener = this.on(wrapperListener);
+  once(listener, ...filters) {
+    wrapperListener.eventId = listener;
+    const unListener = this.on(wrapperListener, ...filters);
     return unListener;
 
     function wrapperListener(...args) {
@@ -112,9 +123,9 @@ class Event {
   off(...listeners) {
     for(let i = 0; i < listeners.length; i++) {
       const listener = listeners[i];
-      const index = this._listeners.indexOf(listener);
+      const index = this._indexOf(listener);
       if (index !== -1) {
-        this._listeners.splice(index, 1);
+        this._removedIndexes.push(index);
       }
     }
   }
@@ -134,6 +145,10 @@ class Event {
     while(this._listeners.length > 0) {
       this._listeners.pop();
     }
+
+    while(this._removedIndexes.length > 0) {
+      this._removedIndexes.pop();
+    }
   }
 
   /**
@@ -149,9 +164,45 @@ class Event {
    * @param {...*} args - Any arguments which should be passed to the listeners
    */
   dispatch(...args) {
+    this._purgeRemovedListeners();
+
     for(let i = 0; i < this._listeners.length; i++) {
       const listener = this._listeners[i];
       listener(...args);
+    }
+  }
+
+
+  /**
+   * Behaves the same as Array#indexOf
+   *
+   * @param {function} eventId - The function which is used to identify an event listener
+   *
+   * @returns {number}
+   * @private
+   */
+  _indexOf(eventId) {
+    return this._listeners.findIndex(it=>it.eventId === eventId);
+  }
+
+  /**
+   * Removes all event listeners which are marked for removal.
+   *
+   * The removal algorithm is operates in O(k) time where k is the amount of items to remove.
+   * It uses a simple "swap then pop" approach which swaps the value to be removed with the
+   * last value in the array and pops of the item to be removed.
+   * <br><br>
+   * This makes the array "unstable" since the removal algorithm reorders the items in the array.
+   *
+   * @private
+   */
+  _purgeRemovedListeners() {
+    while(this._removedIndexes.length > 0) {
+      const tail = this._listeners.length - 1;
+      const index = this._removedIndexes.pop();
+
+      this._listeners[index] = this._listeners[tail];
+      this._listeners.pop();
     }
   }
 }
