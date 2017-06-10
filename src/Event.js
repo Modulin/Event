@@ -32,7 +32,7 @@ class Event {
 
   /**
    * @param {Array} listeners=Array - An optional list of listeners which can be a custom array implementation if
-   * push, pop, splice, indexOf and [array index] are implemented
+   * push, pop, findIndex and [array index] are implemented
    */
   constructor(listeners=[]) {
     this._listeners = listeners;
